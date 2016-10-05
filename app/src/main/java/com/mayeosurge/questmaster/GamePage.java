@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public class GamePage extends Activity {
     int totalGold = 0;
 
     Context c;
+    Inventory playerInventory;
+    GridView pGV;
+    InvGridAdapter pIGA;
 
     Hero h;
 
@@ -28,12 +32,20 @@ public class GamePage extends Activity {
         int hero = getIntent().getIntExtra("hero", 1);
         legion = getIntent().getStringExtra("name");
         h = new Hero(hero);
+        playerInventory = new Inventory();
         ((TextView)findViewById(R.id.tvLegion)).setText("Legion: "+legion);
         ((TextView)findViewById(R.id.tvHero)).setText("Hero: "+names[hero-1]);
         findViewById(R.id.quest1).setOnClickListener(questCL);
         findViewById(R.id.quest2).setOnClickListener(questCL);
         findViewById(R.id.quest3).setOnClickListener(questCL);
         c = this;
+        setGridView();
+    }
+
+    private void setGridView(){
+        pGV = (GridView)findViewById(R.id.gvPlayerInventory);
+        pIGA = new InvGridAdapter(this, playerInventory.inventoryList);
+        pGV.setAdapter(pIGA);
     }
 
     View.OnClickListener questCL = new View.OnClickListener() {
@@ -88,6 +100,7 @@ public class GamePage extends Activity {
     public void statsActivity(View v){
         Intent i = new Intent(GamePage.this, HeroStatsActivity.class);
         i.putExtra("hero", h);
+        i.putExtra("pInv", playerInventory);
         i.putExtra("legion", legion);
         //startActivity(i);
         startActivityForResult(i, 1);
@@ -96,10 +109,13 @@ public class GamePage extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1){
-            if(resultCode == RESULT_OK)
+            if(resultCode == RESULT_OK){
                 h = (Hero)data.getSerializableExtra("hero");
+                playerInventory = (Inventory)data.getSerializableExtra("pInv");
+            }
         }
         updateViews();
+        setGridView();
     }
 
     public void equipShield(View v){

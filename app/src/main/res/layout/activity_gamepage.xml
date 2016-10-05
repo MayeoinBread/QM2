@@ -59,7 +59,7 @@
         android:id="@+id/tvLegion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="16dp"
         android:text="Legion: "/>
 
     <Button android:id="@+id/quest1"
@@ -78,6 +78,18 @@
     <TextView
         android:id="@+id/tvOutput"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Inventory:"/>
+    <GridView
+        android:id="@+id/gvPlayerInventory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="auto_fit"
+        android:gravity="center"
+        android:columnWidth="64dp"
+        android:stretchMode="columnWidth"/>
 
 </LinearLayout>

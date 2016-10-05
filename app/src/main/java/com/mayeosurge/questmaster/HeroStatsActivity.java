@@ -22,6 +22,8 @@ public class HeroStatsActivity extends Activity {
     GridView gv;
     InvGridAdapter iga;
 
+    Inventory playerInventory;
+
     int invItemPos;
 
     @Override
@@ -29,6 +31,7 @@ public class HeroStatsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_herostats);
         h = (Hero) getIntent().getSerializableExtra("hero");
+        playerInventory = (Inventory) getIntent().getSerializableExtra("pInv");
         legion = getIntent().getStringExtra("legion");
         ctx = this;
 
@@ -98,6 +101,7 @@ public class HeroStatsActivity extends Activity {
     public void onBackPressed(){
         Intent i = new Intent();
         i.putExtra("hero", h);
+        i.putExtra("pInv", playerInventory);
         setResult(RESULT_OK, i);
         finish();
     }
@@ -109,6 +113,12 @@ public class HeroStatsActivity extends Activity {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     switch(item.getItemId()){
+                        case R.id.inv_transfer:
+                            h.inventory.delete(h.melee1, 1);
+                            playerInventory.add(new Weapon(h.melee1), 1);
+                            h.dequipWeapon(h.melee1);
+                            setProperties();
+                            return true;
                         case R.id.inv_dequip:
                             h.dequipWeapon(h.melee1);
                             setProperties();
@@ -129,13 +139,18 @@ public class HeroStatsActivity extends Activity {
     }
 
     public void eqShield(View v){
-        System.out.println("Shield: "+h.shield);
         if(h.shield != null){
             PopupMenu popup = new PopupMenu(ctx, v);
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     switch(item.getItemId()){
+                        case R.id.inv_transfer:
+                            h.inventory.delete(h.shield, 1);
+                            playerInventory.add(new Weapon(h.shield), 1);
+                            h.dequipWeapon(h.shield);
+                            setProperties();
+                            return true;
                         case R.id.inv_dequip:
                             h.dequipWeapon(h.shield);
                             setProperties();
@@ -175,6 +190,14 @@ public class HeroStatsActivity extends Activity {
                 case R.id.inv_equip:
                     if (it instanceof Weapon)
                         h.equipWeapon((Weapon)it);
+                    setProperties();
+                    return true;
+                case R.id.inv_transfer:
+                    h.inventory.delete(it, 1);
+                    if(it instanceof Weapon)
+                        playerInventory.add(new Weapon((Weapon)it), 1);
+                    else
+                        playerInventory.add(new InvItem(it), 1);
                     setProperties();
                     return true;
                 case R.id.inv_dequip:

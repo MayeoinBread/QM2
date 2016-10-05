@@ -78,7 +78,6 @@ public class Hero implements Serializable {
         stealth -= w.stealth;
         magic -= w.magic;
         inventory.add(w, 1);
-        System.out.println("attackDefense"+w.attackDefense);
         if(!w.attackDefense)
             shield = null;
         else

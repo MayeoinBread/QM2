@@ -8,7 +8,13 @@ public class Weapon extends InvItem {
     boolean attackDefense;
     // accuracy, defense, weight/speed
 
-    //public Weapon(){}
+    public Weapon(Weapon w){
+        super(w);
+        strength = w.strength;
+        stealth = w.stealth;
+        magic = w.magic;
+        attackDefense = w.attackDefense;
+    }
 
     public Weapon(int id, int qty, boolean attDef) {
         super(id, qty, true, true, false);

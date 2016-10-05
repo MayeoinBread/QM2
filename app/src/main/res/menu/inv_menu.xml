@@ -2,6 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/inv_equip"
           android:title="Equip item"/>
+    <item android:id="@+id/inv_transfer"
+          android:title="Transfer"/>
     <item android:id="@+id/inv_dequip"
           android:title="Dequip item"/>
     <item android:id="@+id/inv_delete"

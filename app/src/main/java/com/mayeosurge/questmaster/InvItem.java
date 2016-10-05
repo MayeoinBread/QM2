@@ -11,6 +11,17 @@ public class InvItem implements Serializable {
     boolean isEquippable;
     boolean isQuestItem;
 
+    public InvItem(){}
+
+    public InvItem(InvItem i){
+        name = i.name;
+        id = i.id;
+        qty = i.qty;
+        isUsable = i.isUsable;
+        isEquippable = i.isEquippable;
+        isQuestItem = i.isQuestItem;
+    }
+
     public InvItem(int id, int qty, boolean iUse, boolean iEquip, boolean iQI){
         this.id = id;
         isUsable = iUse;
