@@ -2,7 +2,6 @@ package com.mayeosurge.questmaster;
 
 public class ArrayVars {
 
-    //dee eet wurk?
     public static final String[] items = {"Key", "Letter", "Ration Pack", "", "",
                                           "Long Sword", "Short Sword", "Basic Bow", "Shield", ""};
 

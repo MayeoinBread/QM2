@@ -89,7 +89,17 @@ public class GamePage extends Activity {
         Intent i = new Intent(GamePage.this, HeroStatsActivity.class);
         i.putExtra("hero", h);
         i.putExtra("legion", legion);
-        startActivity(i);
+        //startActivity(i);
+        startActivityForResult(i, 1);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            if(resultCode == RESULT_OK)
+                h = (Hero)data.getSerializableExtra("hero");
+        }
+        updateViews();
     }
 
     public void equipShield(View v){

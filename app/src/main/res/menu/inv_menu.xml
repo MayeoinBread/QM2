@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/inv_equip"
+          android:title="Equip item"/>
+    <item android:id="@+id/inv_dequip"
+          android:title="Dequip item"/>
+    <item android:id="@+id/inv_delete"
+          android:title="Delete"/>
+</menu>

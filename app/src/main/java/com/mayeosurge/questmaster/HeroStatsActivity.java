@@ -1,16 +1,28 @@
 package com.mayeosurge.questmaster;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 public class HeroStatsActivity extends Activity {
 
     Hero h;
     String legion;
+    Context ctx;
+    GridView gv;
+    InvGridAdapter iga;
+
+    int invItemPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -18,6 +30,7 @@ public class HeroStatsActivity extends Activity {
         setContentView(R.layout.activity_herostats);
         h = (Hero) getIntent().getSerializableExtra("hero");
         legion = getIntent().getStringExtra("legion");
+        ctx = this;
 
         setProperties();
     }
@@ -72,12 +85,110 @@ public class HeroStatsActivity extends Activity {
         ((TextView)findViewById(R.id.tvLegion)).setText(legion);
         ((TextView)findViewById(R.id.tvQuests)).setText(h.successfulQuests+"");
 
-        if(h.shield!=null)
-            ((ImageView)findViewById(R.id.ivShield)).setImageResource(ArrayVars.invImgs[h.shield.getItemId()]);
-        if(h.melee1!= null)
-            ((ImageView)findViewById(R.id.ivMelee)).setImageResource(ArrayVars.invImgs[h.melee1.getItemId()]);
+        ((ImageView)findViewById(R.id.ivShield)).setImageResource(h.shield!=null?ArrayVars.invImgs[h.shield.getItemId()]:R.drawable.inv_blank);
+        ((ImageView)findViewById(R.id.ivMelee)).setImageResource(h.melee1!=null?ArrayVars.invImgs[h.melee1.getItemId()]:R.drawable.inv_blank);
 
-        GridView gv = (GridView)findViewById(R.id.gvInventory);
-        gv.setAdapter(new InvGridAdapter(this, h.inventory.inventoryList));
+        gv = (GridView)findViewById(R.id.gvInventory);
+        iga = new InvGridAdapter(this, h.inventory.inventoryList);
+        gv.setAdapter(iga);
+        gv.setOnItemClickListener(icl);
     }
+
+    @Override
+    public void onBackPressed(){
+        Intent i = new Intent();
+        i.putExtra("hero", h);
+        setResult(RESULT_OK, i);
+        finish();
+    }
+
+    public void eqMelee(View v){
+        if(h.melee1 != null){
+            PopupMenu popup = new PopupMenu(ctx, v);
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch(item.getItemId()){
+                        case R.id.inv_dequip:
+                            h.dequipWeapon(h.melee1);
+                            setProperties();
+                            return true;
+                        case R.id.inv_delete:
+                            h.inventory.delete(h.melee1, 1);
+                            h.dequipWeapon(h.melee1);
+                            setProperties();
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+            });
+            popup.inflate(R.menu.menu_dequip);
+            popup.show();
+        }
+    }
+
+    public void eqShield(View v){
+        System.out.println("Shield: "+h.shield);
+        if(h.shield != null){
+            PopupMenu popup = new PopupMenu(ctx, v);
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch(item.getItemId()){
+                        case R.id.inv_dequip:
+                            h.dequipWeapon(h.shield);
+                            setProperties();
+                            return true;
+                        case R.id.inv_delete:
+                            h.inventory.delete(h.shield, 1);
+                            h.dequipWeapon(h.shield);
+                            setProperties();
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+            });
+            popup.inflate(R.menu.menu_dequip);
+            popup.show();
+        }
+    }
+
+    AdapterView.OnItemClickListener icl = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            InvItem i = (InvItem)parent.getItemAtPosition(position);
+            invItemPos = i.getItemId();
+            PopupMenu popup = new PopupMenu(ctx, view);
+            popup.setOnMenuItemClickListener(micl);
+            popup.inflate(R.menu.inv_menu);
+            popup.show();
+        }
+    };
+
+    PopupMenu.OnMenuItemClickListener micl = new PopupMenu.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            InvItem it = h.inventory.findItemById(invItemPos);
+            switch(item.getItemId()){
+                case R.id.inv_equip:
+                    if (it instanceof Weapon)
+                        h.equipWeapon((Weapon)it);
+                    setProperties();
+                    return true;
+                case R.id.inv_dequip:
+                    if(it instanceof Weapon)
+                        h.dequipWeapon((Weapon)it);
+                    setProperties();
+                    return true;
+                case R.id.inv_delete:
+                    h.inventory.delete(it, 1);
+                    setProperties();
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    };
 }
