@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="16dp">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hero Stats"
+            android:onClick="statsActivity"/>
+        <Button
+            android:id="@+id/btnShield"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Equip Shield"
+            android:enabled="false"
+            android:onClick="equipShield"/>
+        <Button
+            android:id="@+id/btnMelee"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:enabled="false"
+            android:text="Equip Melee"
+            android:onClick="equipMelee"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button android:id="@+id/dequipShield"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="Dequip Shield"
+                android:onClick="dequipShield"/>
+        <Button
+            android:id="@+id/dequipMelee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="Dequip Melee"
+            android:onClick="dequipMelee"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tvGold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gold: 0"/>
+    <TextView
+        android:id="@+id/tvHero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hero: "/>
+    <TextView
+        android:id="@+id/tvLegion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:text="Legion: "/>
+
+    <Button android:id="@+id/quest1"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Quest 1: The Key"/>
+
+    <Button android:id="@+id/quest2"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Quest 2: The Shipment"/>
+    <Button android:id="@+id/quest3"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Quest 3: The Lesson"/>
+    <TextView
+        android:id="@+id/tvOutput"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

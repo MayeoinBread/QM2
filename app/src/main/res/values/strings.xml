@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Quest Master</string>
+    <string name="stats">Stealth: %1$f\nStrength: %2$f\nKnowledge: %3$f\nHealth: %4$f\nMagic: %5$f</string>
+</resources>
