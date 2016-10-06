@@ -7,7 +7,7 @@ public class Shield extends Weapon {
     }
 
     public Shield(int shieldType, int qty){
-        super(shieldType+10, qty);
+        super(shieldType+ArrayVars.SHIELD_START, qty);
         attackDefense = false;
     }
 

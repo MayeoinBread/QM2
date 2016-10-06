@@ -7,7 +7,7 @@ public class Melee extends Weapon {
     }
 
     public Melee(int meleeType, int qty){
-        super(meleeType+5, qty);
+        super(meleeType+ArrayVars.WEAPON_START, qty);
         attackDefense = true;
     }
 

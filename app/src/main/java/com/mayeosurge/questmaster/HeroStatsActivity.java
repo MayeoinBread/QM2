@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class HeroStatsActivity extends Activity {
@@ -50,6 +51,8 @@ public class HeroStatsActivity extends Activity {
             tDiff += h.shield.stealth;
         if(h.melee1 != null)
             tDiff += h.melee1.stealth;
+        for (Armour a:h.armour)
+            tDiff += a != null ? a.stealth : 0;
         sb3.append(tDiff).append("\n");
 
         sb1.append("Strength\n");
@@ -59,16 +62,22 @@ public class HeroStatsActivity extends Activity {
             tDiff += h.shield.strength;
         if(h.melee1 != null)
             tDiff += h.melee1.strength;
+        for (Armour a:h.armour)
+            tDiff += a != null ? a.strength : 0;
         sb3.append(tDiff).append("\n");
 
         sb1.append("Knowledge\n");
         sb2.append(h.knowledge).append("\n");
         tDiff = 0;
+        for (Armour a:h.armour)
+            tDiff += a != null ? a.knowledge : 0;
         sb3.append(tDiff).append("\n");
 
         sb1.append("Max Health\n");
         sb2.append(h.maxHealth).append("\n");
         tDiff = 0;
+        for (Armour a:h.armour)
+            tDiff += a != null ? a.health : 0;
         sb3.append(tDiff).append("\n");
 
         sb1.append("Magic\n");
@@ -78,6 +87,8 @@ public class HeroStatsActivity extends Activity {
             tDiff += h.shield.magic;
         if(h.melee1 != null)
             tDiff += h.melee1.magic;
+        for (Armour a:h.armour)
+            tDiff += a != null ? a.magic : 0;
         sb3.append(tDiff).append("\n");
 
         ((TextView)findViewById(R.id.tvStat)).setText(sb1.toString());
@@ -90,11 +101,19 @@ public class HeroStatsActivity extends Activity {
 
         ((ImageView)findViewById(R.id.ivShield)).setImageResource(h.shield!=null?ArrayVars.invImgs[h.shield.getItemId()]:R.drawable.inv_blank);
         ((ImageView)findViewById(R.id.ivMelee)).setImageResource(h.melee1!=null?ArrayVars.invImgs[h.melee1.getItemId()]:R.drawable.inv_blank);
+        ((ImageView)findViewById(R.id.ivHelmet)).setImageResource(h.armour[0]!=null?ArrayVars.invImgs[h.armour[0].getItemId()]:R.drawable.inv_blank);
+        ((ImageView)findViewById(R.id.ivRarm)).setImageResource(h.armour[1]!=null?ArrayVars.invImgs[h.armour[1].getItemId()]:R.drawable.inv_blank);
+        ((ImageView)findViewById(R.id.ivLarm)).setImageResource(h.armour[2]!=null?ArrayVars.invImgs[h.armour[2].getItemId()]:R.drawable.inv_blank);
+        ((ImageView)findViewById(R.id.ivTorso)).setImageResource(h.armour[3]!=null?ArrayVars.invImgs[h.armour[3].getItemId()]:R.drawable.inv_blank);
 
         gv = (GridView)findViewById(R.id.gvInventory);
         iga = new InvGridAdapter(this, h.inventory.inventoryList);
         gv.setAdapter(iga);
         gv.setOnItemClickListener(icl);
+
+        ProgressBar pb = (ProgressBar)findViewById(R.id.pbHealth);
+        pb.setMax(h.maxHealth);
+        pb.setProgress(h.currentHealth);
     }
 
     @Override
@@ -106,12 +125,60 @@ public class HeroStatsActivity extends Activity {
         finish();
     }
 
+    public void eqArmour(View v){
+        int sel = -1;
+        switch(v.getId()){
+            case R.id.ivHelmet:
+                sel = 0;
+                break;
+            case R.id.ivRarm:
+                sel = 1;
+                break;
+            case R.id.ivLarm:
+                sel = 2;
+                break;
+            case R.id.ivTorso:
+                sel = 3;
+                break;
+        }
+        if(sel>-1){
+            final int s = sel;
+            PopupMenu popup = new PopupMenu(ctx, v);
+            if(!h.armour[sel].heroOnly)
+                popup.getMenu().add(Menu.NONE, 1, Menu.NONE, "Transfer");
+            popup.getMenu().add(Menu.NONE, 2, Menu.NONE, "Dequip");
+            if(!h.armour[sel].heroOnly)
+                popup.getMenu().add(Menu.NONE, 3, Menu.NONE, "Delete");
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()){
+                        case 1:
+                            transferItems(true, h.armour[s]);
+                            return true;
+                        case 2:
+                            dequipItem(h.armour[s]);
+                            return true;
+                        case 3:
+                            deleteItem(h.armour[s], true, 1);
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+            });
+            popup.show();
+        }
+    }
+
     public void eqMelee(View v){
         if(h.melee1 != null){
             PopupMenu popup = new PopupMenu(ctx, v);
-            popup.getMenu().add(Menu.NONE, 1, Menu.NONE, "Transfer");
+            if(!h.melee1.heroOnly)
+                popup.getMenu().add(Menu.NONE, 1, Menu.NONE, "Transfer");
             popup.getMenu().add(Menu.NONE, 2, Menu.NONE, "Dequip");
-            popup.getMenu().add(Menu.NONE, 3, Menu.NONE, "Delete");
+            if(!h.melee1.heroOnly)
+                popup.getMenu().add(Menu.NONE, 3, Menu.NONE, "Delete");
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -137,9 +204,11 @@ public class HeroStatsActivity extends Activity {
     public void eqShield(View v){
         if(h.shield != null){
             PopupMenu popup = new PopupMenu(ctx, v);
-            popup.getMenu().add(Menu.NONE, 1, Menu.NONE, "Transfer");
+            if(!h.shield.heroOnly)
+                popup.getMenu().add(Menu.NONE, 1, Menu.NONE, "Transfer");
             popup.getMenu().add(Menu.NONE, 2, Menu.NONE, "Dequip");
-            popup.getMenu().add(Menu.NONE, 3, Menu.NONE, "Delete");
+            if(!h.shield.heroOnly)
+                popup.getMenu().add(Menu.NONE, 3, Menu.NONE, "Delete");
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -168,11 +237,13 @@ public class HeroStatsActivity extends Activity {
             InvItem i = (InvItem)parent.getItemAtPosition(position);
             invItemPos = i.getItemId();
             PopupMenu popup = new PopupMenu(ctx, view);
-            popup.getMenu().add(Menu.NONE, 1, Menu.NONE, "Equip");
-            popup.getMenu().add(Menu.NONE, 2, Menu.NONE, "Dequip");
+            if(i.isUsable)
+                popup.getMenu().add(Menu.NONE, 0, Menu.NONE, "Use");
+            if(i.isEquippable)
+                popup.getMenu().add(Menu.NONE, 1, Menu.NONE, "Equip");
             if(!i.heroOnly) {
-                popup.getMenu().add(Menu.NONE, 3, Menu.NONE, "Delete");
-                popup.getMenu().add(Menu.NONE, 4, Menu.NONE, "Transfer");
+                popup.getMenu().add(Menu.NONE, 2, Menu.NONE, "Delete");
+                popup.getMenu().add(Menu.NONE, 3, Menu.NONE, "Transfer");
             }
             popup.setOnMenuItemClickListener(micl);
             popup.show();
@@ -184,17 +255,16 @@ public class HeroStatsActivity extends Activity {
         public boolean onMenuItemClick(MenuItem item) {
             InvItem it = h.inventory.findItemById(invItemPos);
             switch(item.getItemId()){
+                case 0:
+                    return true;
                 case 1:
                     equipItem(it);
                     return true;
-                case 4:
-                    transferItems(false, it);
-                    return true;
                 case 2:
-                    dequipItem(it);
+                    deleteItem(it, false, 1);
                     return true;
                 case 3:
-                    deleteItem(it, false, 1);
+                    transferItems(false, it);
                     return true;
                 default:
                     return false;
@@ -214,12 +284,16 @@ public class HeroStatsActivity extends Activity {
     private void equipItem(InvItem item){
         if(item instanceof Weapon)
             h.equipWeapon((Weapon) item);
+        else if(item instanceof Armour)
+            h.equipArmour((Armour) item);
         setProperties();
     }
 
     private void dequipItem(InvItem item){
         if(item instanceof Weapon)
             h.dequipWeapon((Weapon) item);
+        else if(item instanceof Armour)
+            h.dequipArmour((Armour) item);
         setProperties();
     }
 

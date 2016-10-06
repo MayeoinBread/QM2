@@ -15,7 +15,7 @@ public class Hero implements Serializable {
     int maxHealth;
     int currentHealth;
     int magic;
-    int[] armour;
+    Armour[] armour;
     Shield shield;
     Melee melee1;
     Inventory inventory;
@@ -38,12 +38,13 @@ public class Hero implements Serializable {
         cost = r.nextInt(100);
         successfulQuests = 0;
         type = t;
+        inventory = new Inventory();
+        //TODO Set to number of pieces of armour
         // helmet, armL, armR, torso, legL, legR
-        armour = new int[6];
+        armour = new Armour[4];
         // shield, melee 1, melee 2?
         shield = null;
         melee1 = null;
-        inventory = new Inventory();
         stealth = aStealth[t-1];
         strength = aStrength[t-1];
         knowledge = aKnowledge[t-1];
@@ -51,10 +52,38 @@ public class Hero implements Serializable {
         currentHealth = maxHealth;
         magic = aMagic[t-1];
         name = ArrayVars.names[t-1];
+
+        spawnHasWeapon();
+        spawnHasArmour();
     }
 
     public void passQuest(){
         successfulQuests++;
+    }
+
+    private void spawnHasWeapon(){
+        Random r = new Random();
+        int rand = r.nextInt(5);
+        Weapon w;
+        if(rand == 4)
+            w = new Shield(0, 1);
+        else if(rand == 2)
+            w = new Melee(0, 1);
+        else
+            w = null;
+        if(w!=null){
+            w.heroOnly = true;
+            equipWeapon(w);
+        }
+    }
+
+    private void spawnHasArmour(){
+        Armour a;
+        Random r = new Random();
+        int rand = r.nextInt(4);
+        a = new Armour(rand, 1);
+        a.heroOnly = true;
+        equipArmour(a);
     }
 
     public void equipWeapon(Weapon w){
@@ -71,6 +100,16 @@ public class Hero implements Serializable {
         }
     }
 
+    public void equipArmour(Armour a){
+        strength += a.strength;
+        stealth += a.stealth;
+        magic += a.magic;
+        maxHealth += a.health;
+        knowledge += a.knowledge;
+        inventory.delete(a, 1);
+        armour[a.getItemId()-ArrayVars.ARMOUR_START] = a;
+    }
+
     public void dequipWeapon(Weapon w){
         if((w instanceof Shield && shield != null) || (w instanceof Melee && melee1 != null)) {
             strength -= w.strength;
@@ -81,5 +120,15 @@ public class Hero implements Serializable {
             else if (melee1 != null && melee1.getItemId() == w.id)
                 melee1 = null;
         }
+    }
+
+    public void dequipArmour(Armour a){
+        strength -= a.strength;
+        stealth -= a.stealth;
+        magic -= a.magic;
+        maxHealth -= a.health;
+        knowledge -= a.knowledge;
+        inventory.add(a, 1);
+        armour[a.getItemId()-ArrayVars.ARMOUR_START]=null;
     }
 }

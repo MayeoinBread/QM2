@@ -3,20 +3,14 @@
               android:layout_width="64dp"
               android:layout_height="64dp">
     <ImageView
+        android:id="@+id/ivBG"
         android:layout_centerInParent="true"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:background="@android:color/darker_gray"/>
-    <ImageView
-        android:id="@+id/ivHeroOnly"
-        android:layout_width="58dp"
-        android:layout_height="58dp"
-        android:layout_centerInParent="true"
-        android:background="@android:color/holo_green_light"/>
+        android:src="@drawable/inv_gv_item_norm"/>
     <ImageView
         android:id="@+id/ivItem"
         android:layout_centerInParent="true"
-        android:background="@android:color/black"
         android:layout_width="54dp"
         android:layout_height="54dp"/>
     <TextView
