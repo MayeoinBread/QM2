@@ -39,7 +39,21 @@ public class GamePage extends Activity {
         findViewById(R.id.quest2).setOnClickListener(questCL);
         findViewById(R.id.quest3).setOnClickListener(questCL);
         c = this;
+        createInventory();
         setGridView();
+    }
+
+    private void createInventory(){
+        for(int i=0; i<ArrayVars.items.length; i++){
+            if(!ArrayVars.items[i].equals("")){
+                if(i<5)
+                    playerInventory.add(new InvItem(i, 1, true, true, false, false), 1);
+                else if(i<10)
+                    playerInventory.add(new Melee(i, 1, true), 1);
+                else
+                    playerInventory.add(new Shield(i, 1, true), 1);
+            }
+        }
     }
 
     private void setGridView(){

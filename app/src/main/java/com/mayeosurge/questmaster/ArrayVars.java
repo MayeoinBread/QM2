@@ -3,21 +3,22 @@ package com.mayeosurge.questmaster;
 public class ArrayVars {
 
     public static final String[] items = {"Key", "Letter", "Ration Pack", "", "",
-                                          "Long Sword", "Short Sword", "Basic Bow", "Shield", ""};
+                                          "Dagger", "Short Sword", "Long Sword", "Basic Bow", "",
+                                          "Damaged Shield", "Shield", "", "", ""};
 
     public static final int[] invImgs = {R.drawable.inv_key, R.drawable.inv_letter, R.drawable.inv_ration_pack, R.drawable.inv_blank, R.drawable.inv_blank,
-                                         R.drawable.inv_long_sword, R.drawable.inv_short_sword, R.drawable.inv_simple_bow, R.drawable.inv_shield, R.drawable.inv_blank};
+                                         R.drawable.inv_dagger, R.drawable.inv_short_sword, R.drawable.inv_long_sword, R.drawable.inv_simple_bow, R.drawable.inv_blank,
+                                         R.drawable.inv_dmg_shield, R.drawable.inv_shield, R.drawable.inv_blank, R.drawable.inv_blank, R.drawable.inv_blank};
 
+    // str, stea, mag
     public static final int[][] weaponVars =
-            {{2, -1, 0},
-                    {1, 0, 0},
-                    {2, 0, 0},
-                    {0, 0, 0}};
+            {{1, 0, 0}, {1, 0, 0}, {2, -1, 0}, {0, 0, 0}, {},
+             {0, -1, 0}, {0, 0, 0}, {}, {}, {}};
 
     public static final int[][] questVars = {{6, 2, 3, 0}, {4, 6, 3, 0}, {0, 6, 0, 0}};
     public static final InvItem[][] questRewards =
-            {{new Weapon(5, 5, true), new Weapon(8, 5, false)},
-                    {new InvItem(1, 1, false, false, true), new InvItem(2, 20, true, false, false)},
+            {{new Melee(2, 5), new Shield(1, 5)},
+                    {new InvItem(1, 1, false, false, true, true), new InvItem(2, 20, true, false, false)},
                     {}};
     public static final int[] questGold = {0, 0, 50};
 

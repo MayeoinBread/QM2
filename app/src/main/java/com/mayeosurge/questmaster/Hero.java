@@ -16,8 +16,8 @@ public class Hero implements Serializable {
     int currentHealth;
     int magic;
     int[] armour;
-    Weapon shield;
-    Weapon melee1;
+    Shield shield;
+    Melee melee1;
     Inventory inventory;
     int type;
     int successfulQuests;
@@ -62,26 +62,24 @@ public class Hero implements Serializable {
         stealth += w.stealth;
         magic += w.magic;
         inventory.delete(w, 1);
-        if(!w.attackDefense){
-            if(shield != null)
-                dequipWeapon(shield);
-            shield = w;
+        if(w instanceof Shield){
+            if(shield != null) dequipWeapon(shield);
+            shield = (Shield)w;
         }else{
-            if(melee1 != null)
-                dequipWeapon(melee1);
-            melee1 = w;
+            if(melee1 != null) dequipWeapon(melee1);
+            melee1 = (Melee)w;
         }
     }
 
     public void dequipWeapon(Weapon w){
-        strength -= w.strength;
-        stealth -= w.stealth;
-        magic -= w.magic;
-        inventory.add(w, 1);
-        if(!w.attackDefense)
-            shield = null;
-        else
-            if(melee1 != null && melee1.getItemId() == w.id)
+        if((w instanceof Shield && shield != null) || (w instanceof Melee && melee1 != null)) {
+            strength -= w.strength;
+            stealth -= w.stealth;
+            magic -= w.magic;
+            inventory.add(w, 1);
+            if (w instanceof Shield) shield = null;
+            else if (melee1 != null && melee1.getItemId() == w.id)
                 melee1 = null;
+        }
     }
 }

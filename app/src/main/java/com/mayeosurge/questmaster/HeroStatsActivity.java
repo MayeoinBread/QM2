@@ -3,9 +3,8 @@ package com.mayeosurge.questmaster;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.MenuInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -86,7 +85,8 @@ public class HeroStatsActivity extends Activity {
         ((TextView)findViewById(R.id.tvDiff)).setText(sb3.toString());
         ((TextView)findViewById(R.id.tvName)).setText(h.name);
         ((TextView)findViewById(R.id.tvLegion)).setText(legion);
-        ((TextView)findViewById(R.id.tvQuests)).setText(h.successfulQuests+"");
+        String successfulQ = h.successfulQuests+"";
+        ((TextView)findViewById(R.id.tvQuests)).setText(successfulQ);
 
         ((ImageView)findViewById(R.id.ivShield)).setImageResource(h.shield!=null?ArrayVars.invImgs[h.shield.getItemId()]:R.drawable.inv_blank);
         ((ImageView)findViewById(R.id.ivMelee)).setImageResource(h.melee1!=null?ArrayVars.invImgs[h.melee1.getItemId()]:R.drawable.inv_blank);
@@ -109,31 +109,27 @@ public class HeroStatsActivity extends Activity {
     public void eqMelee(View v){
         if(h.melee1 != null){
             PopupMenu popup = new PopupMenu(ctx, v);
+            popup.getMenu().add(Menu.NONE, 1, Menu.NONE, "Transfer");
+            popup.getMenu().add(Menu.NONE, 2, Menu.NONE, "Dequip");
+            popup.getMenu().add(Menu.NONE, 3, Menu.NONE, "Delete");
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     switch(item.getItemId()){
-                        case R.id.inv_transfer:
-                            h.inventory.delete(h.melee1, 1);
-                            playerInventory.add(new Weapon(h.melee1), 1);
-                            h.dequipWeapon(h.melee1);
-                            setProperties();
+                        case 1:
+                            transferItems(true, h.melee1);
                             return true;
-                        case R.id.inv_dequip:
-                            h.dequipWeapon(h.melee1);
-                            setProperties();
+                        case 2:
+                            dequipItem(h.melee1);
                             return true;
-                        case R.id.inv_delete:
-                            h.inventory.delete(h.melee1, 1);
-                            h.dequipWeapon(h.melee1);
-                            setProperties();
+                        case 3:
+                            deleteItem(h.melee1, true, 1);
                             return true;
                         default:
                             return false;
                     }
                 }
             });
-            popup.inflate(R.menu.menu_dequip);
             popup.show();
         }
     }
@@ -141,31 +137,27 @@ public class HeroStatsActivity extends Activity {
     public void eqShield(View v){
         if(h.shield != null){
             PopupMenu popup = new PopupMenu(ctx, v);
+            popup.getMenu().add(Menu.NONE, 1, Menu.NONE, "Transfer");
+            popup.getMenu().add(Menu.NONE, 2, Menu.NONE, "Dequip");
+            popup.getMenu().add(Menu.NONE, 3, Menu.NONE, "Delete");
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     switch(item.getItemId()){
-                        case R.id.inv_transfer:
-                            h.inventory.delete(h.shield, 1);
-                            playerInventory.add(new Weapon(h.shield), 1);
-                            h.dequipWeapon(h.shield);
-                            setProperties();
+                        case 1:
+                            transferItems(true, h.shield);
                             return true;
-                        case R.id.inv_dequip:
-                            h.dequipWeapon(h.shield);
-                            setProperties();
+                        case 2:
+                            dequipItem(h.shield);
                             return true;
-                        case R.id.inv_delete:
-                            h.inventory.delete(h.shield, 1);
-                            h.dequipWeapon(h.shield);
-                            setProperties();
+                        case 3:
+                            deleteItem(h.shield, true, 1);
                             return true;
                         default:
                             return false;
                     }
                 }
             });
-            popup.inflate(R.menu.menu_dequip);
             popup.show();
         }
     }
@@ -176,8 +168,13 @@ public class HeroStatsActivity extends Activity {
             InvItem i = (InvItem)parent.getItemAtPosition(position);
             invItemPos = i.getItemId();
             PopupMenu popup = new PopupMenu(ctx, view);
+            popup.getMenu().add(Menu.NONE, 1, Menu.NONE, "Equip");
+            popup.getMenu().add(Menu.NONE, 2, Menu.NONE, "Dequip");
+            if(!i.heroOnly) {
+                popup.getMenu().add(Menu.NONE, 3, Menu.NONE, "Delete");
+                popup.getMenu().add(Menu.NONE, 4, Menu.NONE, "Transfer");
+            }
             popup.setOnMenuItemClickListener(micl);
-            popup.inflate(R.menu.inv_menu);
             popup.show();
         }
     };
@@ -187,31 +184,49 @@ public class HeroStatsActivity extends Activity {
         public boolean onMenuItemClick(MenuItem item) {
             InvItem it = h.inventory.findItemById(invItemPos);
             switch(item.getItemId()){
-                case R.id.inv_equip:
-                    if (it instanceof Weapon)
-                        h.equipWeapon((Weapon)it);
-                    setProperties();
+                case 1:
+                    equipItem(it);
                     return true;
-                case R.id.inv_transfer:
-                    h.inventory.delete(it, 1);
-                    if(it instanceof Weapon)
-                        playerInventory.add(new Weapon((Weapon)it), 1);
-                    else
-                        playerInventory.add(new InvItem(it), 1);
-                    setProperties();
+                case 4:
+                    transferItems(false, it);
                     return true;
-                case R.id.inv_dequip:
-                    if(it instanceof Weapon)
-                        h.dequipWeapon((Weapon)it);
-                    setProperties();
+                case 2:
+                    dequipItem(it);
                     return true;
-                case R.id.inv_delete:
-                    h.inventory.delete(it, 1);
-                    setProperties();
+                case 3:
+                    deleteItem(it, false, 1);
                     return true;
                 default:
                     return false;
             }
         }
     };
+
+    private void transferItems(boolean equipped, InvItem item){
+        h.inventory.delete(item, 1);
+        if(equipped) h.dequipWeapon((Weapon)item);
+        if(item instanceof Shield) playerInventory.add(new Shield((Weapon)item), 1);
+        else if(item instanceof Melee) playerInventory.add(new Melee((Weapon)item), 1);
+        else playerInventory.add(new InvItem(item), 1);
+        setProperties();
+    }
+
+    private void equipItem(InvItem item){
+        if(item instanceof Weapon)
+            h.equipWeapon((Weapon) item);
+        setProperties();
+    }
+
+    private void dequipItem(InvItem item){
+        if(item instanceof Weapon)
+            h.dequipWeapon((Weapon) item);
+        setProperties();
+    }
+
+    private void deleteItem(InvItem item, boolean equipped, int qty){
+        if(equipped)
+            h.dequipWeapon((Weapon)item);
+        h.inventory.delete(item, qty);
+        setProperties();
+    }
 }

@@ -2,6 +2,7 @@ package com.mayeosurge.questmaster;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,8 @@ public class InvGridAdapter extends BaseAdapter {
             String qty = items.get(pos).getQty()+"";
             ((TextView)gridView.findViewById(R.id.tvQty)).setText(qty);
             ((ImageView)gridView.findViewById(R.id.ivItem)).setImageResource(ArrayVars.invImgs[items.get(pos).getItemId()]);
+            if(items.get(pos).heroOnly)
+                gridView.findViewById(R.id.ivHeroOnly).setBackgroundColor(Color.RED);
         }
         return gridView;
     }

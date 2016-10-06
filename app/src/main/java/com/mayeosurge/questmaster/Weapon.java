@@ -13,10 +13,9 @@ public class Weapon extends InvItem {
         strength = w.strength;
         stealth = w.stealth;
         magic = w.magic;
-        attackDefense = w.attackDefense;
     }
 
-    public Weapon(int id, int qty, boolean attDef) {
+    public Weapon(int id, int qty) {
         super(id, qty, true, true, false);
         this.name = ArrayVars.items[id];
         // weaponVars is separate array, have to "reset" id
@@ -24,6 +23,5 @@ public class Weapon extends InvItem {
         strength = ArrayVars.weaponVars[id][0];
         stealth = ArrayVars.weaponVars[id][1];
         magic = ArrayVars.weaponVars[id][2];
-        attackDefense = attDef;
     }
 }
