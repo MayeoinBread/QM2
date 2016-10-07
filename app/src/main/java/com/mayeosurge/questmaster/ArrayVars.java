@@ -32,6 +32,7 @@ public class ArrayVars {
     public static final int[] questGold = {0, 0, 50};
 
     public static final String[] names = {"Thomas the Red", "Cyrus the Green", "Richard the Blue"};
+    public static final int[] hColours = {R.drawable.hero_red, R.drawable.hero_green, R.drawable.hero_blue};
 
     public static final String[] qTitles = {"The Key", "The Shipment", "The Lesson"};
     public static final String[] qMsg = {"There\'s a key we need to get into the guard weapon stores for Drogston. The key is kept on the Mayor at all times but he leaves it beside him when sleeping. If you can steal the key we\'ll split the weapons stash 75/25\n\nReward:\n5 long swords\n5 shields",

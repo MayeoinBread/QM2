@@ -7,9 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GamePage extends Activity {
@@ -34,7 +36,6 @@ public class GamePage extends Activity {
         h = new Hero(hero);
         playerInventory = new Inventory();
         ((TextView)findViewById(R.id.tvLegion)).setText("Legion: "+legion);
-        ((TextView)findViewById(R.id.tvHero)).setText("Hero: "+names[hero-1]);
         findViewById(R.id.quest1).setOnClickListener(questCL);
         findViewById(R.id.quest2).setOnClickListener(questCL);
         findViewById(R.id.quest3).setOnClickListener(questCL);
@@ -60,6 +61,20 @@ public class GamePage extends Activity {
         pGV = (GridView)findViewById(R.id.gvPlayerInventory);
         pIGA = new InvGridAdapter(this, playerInventory.inventoryList);
         pGV.setAdapter(pIGA);
+
+        List<Hero> hList = new ArrayList<>();
+        hList.add(h);
+        GridView hgv = (GridView)findViewById(R.id.gvHero);
+        HeroLVAdapter hlv = new HeroLVAdapter(this, hList);
+        hgv.setAdapter(hlv);
+        hgv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Hero h = (Hero)parent.getItemAtPosition(position);
+                if(h != null)
+                    statsActivity(h);
+            }
+        });
     }
 
     View.OnClickListener questCL = new View.OnClickListener() {
@@ -111,9 +126,9 @@ public class GamePage extends Activity {
                 .show();
     }
 
-    public void statsActivity(View v){
+    public void statsActivity(Hero hero){
         Intent i = new Intent(GamePage.this, HeroStatsActivity.class);
-        i.putExtra("hero", h);
+        i.putExtra("hero", hero);
         i.putExtra("pInv", playerInventory);
         i.putExtra("legion", legion);
         //startActivity(i);
@@ -130,26 +145,6 @@ public class GamePage extends Activity {
         }
         updateViews();
         setGridView();
-    }
-
-    public void equipShield(View v){
-        h.equipWeapon((Weapon)h.inventory.findItemById(8));
-        updateViews();
-    }
-
-    public void equipMelee(View v){
-        h.equipWeapon((Weapon)h.inventory.findItemById(5));
-        updateViews();
-    }
-
-    public void dequipShield(View v){
-        h.dequipWeapon((Weapon)h.inventory.findItemById(8));
-        updateViews();
-    }
-
-    public void dequipMelee(View v){
-        h.dequipWeapon((Weapon)h.inventory.findItemById(5));
-        updateViews();
     }
 
     public String getHeroStats(Hero hero){
@@ -185,12 +180,6 @@ public class GamePage extends Activity {
     }
 
     public void updateViews(){
-        if(h.inventory.findItemById(8) != null)
-            findViewById(R.id.btnShield).setEnabled(true);
-        if(h.inventory.findItemById(5) != null)
-            findViewById(R.id.btnMelee).setEnabled(true);
-        findViewById(R.id.dequipShield).setEnabled(h.shield != null);
-        findViewById(R.id.dequipMelee).setEnabled(h.melee1 != null);
         ((TextView)findViewById(R.id.tvGold)).setText("Gold: "+totalGold);
     }
 }

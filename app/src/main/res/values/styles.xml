@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ProgressBarQM" parent="android:Widget.Holo.Light.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/qm_progress_hor</item>
+        <item name="android:indeterminateDrawable">@drawable/qm_progress_ind_hor</item>
+    </style>
+
 </resources>

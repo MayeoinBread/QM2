@@ -76,6 +76,7 @@
         android:text="HP:"/>
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/qm_progress_hor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/pbHealth"
@@ -90,16 +91,18 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/ivMelee"
-            android:layout_margin="8dp"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:background="@drawable/item_bg"
+            android:layout_margin="1dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:clickable="true"
             android:onClick="eqMelee"/>
         <ImageView
             android:id="@+id/ivShield"
-            android:layout_margin="8dp"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:background="@drawable/item_bg"
+            android:layout_margin="1dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:clickable="true"
             android:onClick="eqShield"/>
     </LinearLayout>
@@ -108,30 +111,34 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/ivHelmet"
-            android:layout_margin="8dp"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:background="@drawable/item_bg"
+            android:layout_margin="1dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:clickable="true"
             android:onClick="eqArmour"/>
         <ImageView
             android:id="@+id/ivRarm"
-            android:layout_margin="8dp"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:background="@drawable/item_bg"
+            android:layout_margin="1dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:clickable="true"
             android:onClick="eqArmour"/>
         <ImageView
             android:id="@+id/ivLarm"
-            android:layout_margin="8dp"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:background="@drawable/item_bg"
+            android:layout_margin="1dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:clickable="true"
             android:onClick="eqArmour"/>
         <ImageView
             android:id="@+id/ivTorso"
-            android:layout_margin="8dp"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:background="@drawable/item_bg"
+            android:layout_margin="1dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:clickable="true"
             android:onClick="eqArmour"/>
     </LinearLayout>

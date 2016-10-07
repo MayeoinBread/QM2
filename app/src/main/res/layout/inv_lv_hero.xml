@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="64dp"
+              android:layout_margin="8dp">
+    <ImageView
+        android:id="@+id/ivHero"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginRight="8dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/hero_blue"/>
+
+    <ProgressBar
+        android:id="@+id/pbHealth"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/qm_progress_hor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivHero"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"/>
+
+    <TextView
+        android:id="@+id/tvHName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivHero"
+        android:text="NAME"/>
+
+    <TextView
+        android:id="@+id/tvHP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvHName"
+        android:layout_marginTop="18dp"
+        android:layout_toRightOf="@+id/ivHero"
+        android:text="HP"/>
+
+</RelativeLayout>
