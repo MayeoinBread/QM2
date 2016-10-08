@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Legion name:"/>
+    <EditText
+        android:id="@+id/etLegion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Select your hero:"/>
+    <LinearLayout
+        android:clickable="true"
+        android:id="@+id/heroRed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#FF0000"
+            android:orientation="vertical"
+            android:padding="8dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Red Hero"
+                android:textAppearance="?android:textAppearanceMedium"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loves fighting, lost a few braincells on the way"/>
+        </LinearLayout>
+        <LinearLayout
+            android:clickable="true"
+            android:id="@+id/heroGreen"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#00FF00"
+            android:orientation="vertical"
+            android:padding="8dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Green Hero"
+                android:textAppearance="?android:textAppearanceMedium"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bit of an all-rounder"/>
+        </LinearLayout>
+        <LinearLayout
+            android:clickable="true"
+            android:id="@+id/heroBlue"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#0000FF"
+            android:orientation="vertical"
+            android:padding="8dp">
+            <TextView
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Blue Hero"
+                android:textAppearance="?android:textAppearanceMedium"/>
+            <TextView
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shneaky fecker, likes the odd book as well"/>
+        </LinearLayout>
+    </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp"
+        android:onClick="continueClick"
+        android:text="Continue"/>
+</LinearLayout>

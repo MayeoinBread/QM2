@@ -31,8 +31,8 @@ public class GamePage extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gamepage);
-        int hero = getIntent().getIntExtra("hero", 1);
-        legion = getIntent().getStringExtra("name");
+        int hero = getIntent().getIntExtra("hero", 0);
+        legion = getIntent().getStringExtra("legion");
         h = new Hero(hero);
         playerInventory = new Inventory();
         ((TextView)findViewById(R.id.tvLegion)).setText("Legion: "+legion);
@@ -117,6 +117,14 @@ public class GamePage extends Activity {
             }).show();
         }
     };
+
+    public void randomQuest(View v){
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setTitle("Quest")
+                .setMessage(Quest.makeQuest())
+                .show();
+    }
 
     public void statsPopup(View v){
         new AlertDialog.Builder(this)

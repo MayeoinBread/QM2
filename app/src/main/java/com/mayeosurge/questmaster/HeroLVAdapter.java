@@ -48,7 +48,7 @@ public class HeroLVAdapter extends BaseAdapter {
             ProgressBar pb = (ProgressBar)gridView.findViewById(R.id.pbHealth);
             pb.setMax(h.maxHealth);
             pb.setProgress(h.currentHealth);
-            ((ImageView)gridView.findViewById(R.id.ivHero)).setImageResource(ArrayVars.hColours[h.type-1]);
+            ((ImageView)gridView.findViewById(R.id.ivHero)).setImageResource(ArrayVars.hColours[h.type]);
         }
         return gridView;
     }

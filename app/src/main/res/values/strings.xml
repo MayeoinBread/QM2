@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Quest Master</string>
+    <string name="backstory">Debt has run you out of your hometown, the great Salton City, capital of Koroth. You were once a great buyer and seller of services, picking the right man for every job.\n\n
+    Following a series of…bad investments, you\'ve gone broke and the Kylo faction is owed a lot of money. You packed up your things and rode as far north as possible.\n\n
+    The weather is cold and bitter, but this gives you space to set up shop and go back to doing what you do best, picking the right man for the right job. You\'ve settled in Quagmar, rented a vacant space in the town and it\'s only a matter of minutes before you have sell swords looking to put themselves down for work.\n\n
+    &lt;&lt;Swipe to continue&gt;&gt;</string>
     <string name="hp">HP: %1$d/%2$d</string>
+    <string name="stats">Max Health: %1$d\nStealth: %2$d\nStrength: %3$d\nKnowledge: %4$d\nMagic: %5$d</string>
 </resources>

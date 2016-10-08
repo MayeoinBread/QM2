@@ -34,27 +34,30 @@ public class Hero implements Serializable {
     public Hero(){}
 
     public Hero(int t){
-        Random r = new Random();
-        cost = r.nextInt(100);
-        successfulQuests = 0;
+        // t = -1 for "null"/"blank" heroes ie. opening pager array
         type = t;
-        inventory = new Inventory();
-        //TODO Set to number of pieces of armour
-        // helmet, armL, armR, torso, legL, legR
-        armour = new Armour[4];
-        // shield, melee 1, melee 2?
-        shield = null;
-        melee1 = null;
-        stealth = aStealth[t-1];
-        strength = aStrength[t-1];
-        knowledge = aKnowledge[t-1];
-        maxHealth = aHealth[t-1];
-        currentHealth = maxHealth;
-        magic = aMagic[t-1];
-        name = ArrayVars.names[t-1];
+        if(t != -1){
+            Random r = new Random();
+            cost = r.nextInt(100);
+            successfulQuests = 0;
+            inventory = new Inventory();
+            //TODO Set to number of pieces of armour
+            // helmet, armL, armR, torso, legL, legR
+            armour = new Armour[4];
+            // shield, melee 1, melee 2?
+            shield = null;
+            melee1 = null;
+            stealth = aStealth[t];
+            strength = aStrength[t];
+            knowledge = aKnowledge[t];
+            maxHealth = aHealth[t];
+            currentHealth = maxHealth;
+            magic = aMagic[t];
+            name = ArrayVars.names[t];
 
-        spawnHasWeapon();
-        spawnHasArmour();
+            spawnHasWeapon();
+            spawnHasArmour();
+        }
     }
 
     public void passQuest(){

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="16dp">
+
+    <TextView
+        android:id="@+id/tvHName"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"/>
+
+    <ImageView
+        android:id="@+id/ivHeroPager"
+        android:layout_below="@+id/tvHName"
+        android:layout_width="256dp"
+        android:layout_height="256dp"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/tvS"
+        android:layout_below="@+id/ivHeroPager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:layout_centerHorizontal="true"
+        android:text="Stats:"/>
+
+    <TextView
+        android:id="@+id/tvStats"
+        android:layout_below="@+id/tvS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:layout_centerHorizontal="true"/>
+</RelativeLayout>

@@ -3,6 +3,7 @@ package com.mayeosurge.questmaster;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class Quest {
 
@@ -67,5 +68,39 @@ public class Quest {
             goldReward += h.cost;
         System.out.println("Quest "+id+":\nSuccess chance: "+successChance);
         questSucceeded = true;
+    }
+
+    public static String makeQuest(){
+        String[][] qString;
+        StringBuilder sb = new StringBuilder();
+        sb.append("I need ");
+        Random r = new Random();
+        int c1 = r.nextInt(3);
+        switch (c1){
+            case 0:
+            default:
+                qString = ArrayVars.qMaker1;
+                break;
+            case 1:
+                qString = ArrayVars.qMaker2;
+                break;
+            case 2:
+                qString = ArrayVars.qMaker3;
+                break;
+        }
+
+        int s1 = r.nextInt(qString[0].length);
+        int s2 = r.nextInt(qString[1].length);
+        int s3 = r.nextInt(qString[2].length);
+        int s4 = r.nextInt(qString[3].length);
+        int loc = r.nextInt(ArrayVars.locations.length);
+
+        sb.append(qString[0][s1]).append(" ")
+                .append(qString[1][s2]).append(" ")
+                .append(qString[2][s3]).append(" ")
+                .append(qString[3][s4]).append(" ")
+                .append(ArrayVars.locations[loc]).append(".");
+
+        return sb.toString();
     }
 }
