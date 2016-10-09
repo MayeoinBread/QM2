@@ -44,4 +44,7 @@ public class ArrayVars {
     public static final String[][] qMaker3 = {{"someone to","to"},{"deliver"},{"someone","something"},{"to"}};
 
     public static final String[] locations = {"Location A", "Location B", "Location C", "Location D", "Location E"};
+
+    // 1 = gold, 2 = item (no weapon), 3 = weapon, 4 = item or weapon, 5 = item, weapon or gold (gold bias), 6 = item, weapon or gold (i/w bias)
+    public static final int[][] rewards = {{1, 5, 1, 5, 4, 1, 1}, {6, 4, 4, 1, 1}, {1}};
 }

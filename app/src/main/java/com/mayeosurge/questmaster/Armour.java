@@ -17,4 +17,13 @@ public class Armour extends InvItem {
         knowledge = ArrayVars.weaponVars[id][3];
         health = ArrayVars.weaponVars[id][4];
     }
+
+    public Armour(int id, int qty, boolean startup){
+        super(id, qty, false, true, false);
+        strength = ArrayVars.weaponVars[id][0];
+        stealth = ArrayVars.weaponVars[id][1];
+        magic = ArrayVars.weaponVars[id][2];
+        knowledge = ArrayVars.weaponVars[id][3];
+        health = ArrayVars.weaponVars[id][4];
+    }
 }

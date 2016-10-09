@@ -119,10 +119,21 @@ public class GamePage extends Activity {
     };
 
     public void randomQuest(View v){
+        final Quest q = Quest.makeQuest();
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .setTitle("Quest")
-                .setMessage(Quest.makeQuest())
+                .setMessage(q.description)
+                .setPositiveButton("Start", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        addReward(h, q.reward, q.goldReward);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {}
+                })
                 .show();
     }
 
