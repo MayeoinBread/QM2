@@ -1,6 +1,8 @@
 package com.mayeosurge.questmaster;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -104,7 +106,11 @@ public class SetupActivity extends FragmentActivity {
             }else{
                 v = inflater.inflate(R.layout.pager_hero_select, container, false);
                 ((TextView)v.findViewById(R.id.tvHName)).setText(h.name);
-                ((ImageView)v.findViewById(R.id.ivHeroPager)).setImageResource(ArrayVars.hColours[h.type]);
+                // Remove anti-alias from image
+                Bitmap bmp = BitmapFactory.decodeResource(v.getResources(), ArrayVars.hColours[h.type]);
+                bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth()*4, bmp.getHeight()*4, false);
+                //((ImageView)v.findViewById(R.id.ivHeroPager)).setImageResource(ArrayVars.hColours[h.type]);
+                ((ImageView)v.findViewById(R.id.ivHeroPager)).setImageBitmap(bmp);
                 String s = String.format(getString(R.string.stats), h.maxHealth, h.stealth, h.strength, h.knowledge, h.magic);
                 ((TextView)v.findViewById(R.id.tvStats)).setText(s);
             }

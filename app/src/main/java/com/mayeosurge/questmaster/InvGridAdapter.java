@@ -2,6 +2,8 @@ package com.mayeosurge.questmaster;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +46,10 @@ public class InvGridAdapter extends BaseAdapter {
             gridView = inflater.inflate(R.layout.inv_grid_item, null);
             String qty = items.get(pos).getQty()+"";
             ((TextView)gridView.findViewById(R.id.tvQty)).setText(qty);
-            ((ImageView)gridView.findViewById(R.id.ivItem)).setImageResource(ArrayVars.invImgs[items.get(pos).getItemId()]);
+            Bitmap bmp = BitmapFactory.decodeResource(gridView.getResources(), ArrayVars.invImgs[items.get(pos).getItemId()]);
+            bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight(), false);
+            //((ImageView)gridView.findViewById(R.id.ivItem)).setImageResource(ArrayVars.invImgs[items.get(pos).getItemId()]);
+            ((ImageView)gridView.findViewById(R.id.ivItem)).setImageBitmap(bmp);
             if(items.get(pos).heroOnly)
                 ((ImageView)gridView.findViewById(R.id.ivBG)).setImageResource(R.drawable.inv_gv_item_hero);
         }
