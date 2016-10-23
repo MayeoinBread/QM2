@@ -18,6 +18,8 @@
         <activity android:name=".SetupActivity"/>
         <activity android:name=".GamePage"/>
         <activity android:name=".HeroStatsActivity"/>
+        <activity android:name=".ActivityQuests"/>
+        <receiver android:name=".NotifPub"/>
     </application>
 
 </manifest>

@@ -16,6 +16,8 @@ public class ArrayVars {
                                          R.drawable.inv_dmg_shield, R.drawable.inv_shield, R.drawable.inv_blank, R.drawable.inv_blank, R.drawable.inv_blank,
                                          R.drawable.inv_leath_helmet, R.drawable.inv_leath_rarm, R.drawable.inv_leath_larm, R.drawable.inv_leath_torso, R.drawable.inv_blank};
 
+    public static final long[] questDuration = {30000, 60000, 90000, 120000};
+
     // Weapons: str, stea, mag
     // Armour: str, stea, mag, know, health
     public static final int[][] weaponVars =

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/btnRquest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Random Quest"
+        android:onClick="randomQuest"/>
+
+    <Button android:id="@+id/quest1"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Quest 1: The Key"/>
+
+    <Button android:id="@+id/quest2"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Quest 2: The Shipment"/>
+    <Button android:id="@+id/quest3"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Quest 3: The Lesson"/>
+    <Button android:id="@+id/btnNotify"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Notification!"
+            android:onClick="setNotification"/>
+
+    <TextView
+        android:id="@+id/tvActiveQuests"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

@@ -1,5 +1,9 @@
 package com.mayeosurge.questmaster;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.os.SystemClock;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,31 +11,80 @@ import java.util.Random;
 
 public class Quest {
 
-    int id;
+    //TODO pass Hero id (?) as item in Quest for use later
+
+    long id;
     int minStealth;
     int minStrength;
     int minKnowledge;
     int minMagic;
+    // Quest time length in millis
+    long duration;
+    long startTime;
     double successChance;
     List<InvItem> reward;
     int goldReward;
+    String title;
     String description;
-    boolean questSucceeded = false;
+    boolean questActive;
+    boolean questSucceeded;
 
     public Quest(int id){
-        this.id = id;
+        this.id = id+1;
         reward = new ArrayList<>();
         minStealth = ArrayVars.questVars[id][0];
         minStrength = ArrayVars.questVars[id][1];
         minKnowledge = ArrayVars.questVars[id][2];
         minMagic = ArrayVars.questVars[id][3];
+        duration = ArrayVars.questDuration[id];
         setReward(ArrayVars.questRewards[id], ArrayVars.questGold[id]);
     }
 
+    // Quest from DB, KEEP!!!
+    public Quest(long id){
+        this.id = id;
+        id--;
+        reward = new ArrayList<>();
+        Random r = new Random();
+        if(id < 3){
+            title = ArrayVars.qTitles[(int)id];
+            description = ArrayVars.qMsg[(int)id];
+            minStealth = ArrayVars.questVars[(int)id][0];
+            minStrength = ArrayVars.questVars[(int)id][1];
+            minKnowledge = ArrayVars.questVars[(int)id][2];
+            minMagic = ArrayVars.questVars[(int)id][3];
+            setReward(ArrayVars.questRewards[(int)id], ArrayVars.questGold[(int)id]);
+        }
+        //System.out.println("Quest: id: "+id);
+        //System.out.println("Quest: Desc: "+description);
+        duration = ArrayVars.questDuration[r.nextInt(ArrayVars.questDuration.length)];
+        questActive = false;
+        questSucceeded = false;
+    }
+
+    public Quest(Cursor c){
+        id = c.getInt(0);
+        title = c.getString(1);
+        description = c.getString(2);
+        reward = Conversions.stringToReward(c.getString(3));
+        goldReward = c.getInt(4);
+        int[] levels = Conversions.stringToLevels(c.getString(5));
+        minStealth = levels[0];
+        minStrength = levels[1];
+        minKnowledge = levels[2];
+        minMagic = levels[3];
+        questActive = c.getInt(6) == 1;
+        startTime = c.getInt(7);
+        duration = c.getInt(8);
+        questSucceeded = c.getInt(9) == 1;
+    }
+
     public Quest(int id, String desc){
+        Random r = new Random();
         this.id = id;
         reward = new ArrayList<>();
         description = desc;
+        duration = ArrayVars.questDuration[r.nextInt(3)];
     }
 
     public void getMissionSuccessChance(Hero h){
@@ -71,10 +124,12 @@ public class Quest {
 
     public void runQuest(Hero h){
         getMissionSuccessChance(h);
-        if(id == 1)
-            goldReward += h.cost;
-        System.out.println("Quest "+id+":\nSuccess chance: "+successChance);
-        questSucceeded = true;
+        if(SystemClock.elapsedRealtime() < startTime+duration){
+            if(id == 1)
+                goldReward += h.cost;
+            System.out.println("Quest "+id+":\nSuccess chance: "+successChance);
+            questSucceeded = true;
+        }
     }
 
     public static Quest makeQuest(){
@@ -114,6 +169,7 @@ public class Quest {
                 .append(ArrayVars.locations[loc]).append(".\n\n")
                 .append("Reward:\n- ");
 
+        //TODO ID (5) is superfluous, just leave String as an argument
         Quest q = new Quest(5, sb.toString());
 
         switch(rwrd){
@@ -217,6 +273,8 @@ public class Quest {
         }else{
             q.description += q.goldReward+" Gold";
         }
+
+        q.title = "Random Quest";
 
         return q;
     }

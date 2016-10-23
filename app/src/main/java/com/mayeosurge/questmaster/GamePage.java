@@ -3,7 +3,6 @@ package com.mayeosurge.questmaster;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -36,9 +35,6 @@ public class GamePage extends Activity {
         h = new Hero(hero);
         playerInventory = new Inventory();
         ((TextView)findViewById(R.id.tvLegion)).setText("Legion: "+legion);
-        findViewById(R.id.quest1).setOnClickListener(questCL);
-        findViewById(R.id.quest2).setOnClickListener(questCL);
-        findViewById(R.id.quest3).setOnClickListener(questCL);
         c = this;
         createInventory();
         setGridView();
@@ -77,66 +73,6 @@ public class GamePage extends Activity {
         });
     }
 
-    View.OnClickListener questCL = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            int qNum;
-            switch(v.getId()){
-                default:
-                case R.id.quest1:
-                    qNum = 0;
-                    break;
-                case R.id.quest2:
-                    qNum = 1;
-                    break;
-                case R.id.quest3:
-                    qNum = 2;
-                    break;
-            }
-            final Hero ah = h;
-            final int qn = qNum;
-            final View fV = v;
-            AlertDialog.Builder a = new AlertDialog.Builder(c);
-            a.setTitle(ArrayVars.qTitles[qNum])
-                    .setMessage(ArrayVars.qMsg[qNum])
-                    .setPositiveButton("Start", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Quest q = new Quest(qn);
-                            q.runQuest(ah);
-                            findViewById(fV.getId()).setEnabled(false);
-                            ((TextView)findViewById(R.id.tvOutput)).setText("Quest success chance: "+q.successChance);
-                            if(q.questSucceeded)
-                                addReward(h, q.reward, q.goldReward);
-                        }
-                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            }).show();
-        }
-    };
-
-    public void randomQuest(View v){
-        final Quest q = Quest.makeQuest();
-        new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setTitle("Quest")
-                .setMessage(q.description)
-                .setPositiveButton("Start", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        addReward(h, q.reward, q.goldReward);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {}
-                })
-                .show();
-    }
-
     public void statsPopup(View v){
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_info)
@@ -154,13 +90,28 @@ public class GamePage extends Activity {
         startActivityForResult(i, 1);
     }
 
+    public void questActivity(View v){
+        Intent i = new Intent(GamePage.this, ActivityQuests.class);
+        i.putExtra("hero", h);
+        i.putExtra("totalGold", totalGold);
+        startActivityForResult(i, 2);
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1){
-            if(resultCode == RESULT_OK){
-                h = (Hero)data.getSerializableExtra("hero");
-                playerInventory = (Inventory)data.getSerializableExtra("pInv");
-            }
+        switch (requestCode){
+            case 1:
+                if(resultCode == RESULT_OK){
+                    h = (Hero)data.getSerializableExtra("hero");
+                    playerInventory = (Inventory)data.getSerializableExtra("pInv");
+                }
+                break;
+            case 2:
+                if(resultCode == RESULT_OK){
+                    h = (Hero)data.getSerializableExtra("hero");
+                    totalGold = data.getIntExtra("totalGold", 0);
+                }
+                break;
         }
         updateViews();
         setGridView();
