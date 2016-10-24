@@ -19,6 +19,7 @@ public class DbQuestAdapter {
     public static final String KEY_ACTIVE = "questActive";
     public static final String KEY_START_TIME = "startTime";
     public static final String KEY_DURATION = "duration";
+    public static final String KEY_SUCCEED = "succeeded";
     public static final String KEY_COMPLETED = "complete";
 
     private static final String DATABASE_NAME = "QmDatabase";
@@ -28,9 +29,9 @@ public class DbQuestAdapter {
 
     private static final String DATABASE_CREATE =
             "CREATE TABLE "+DATABASE_TABLE+" ("+KEY_ROWID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + KEY_TITLE+" TEXT, "+KEY_DESC+" TEXT, "+KEY_REWARD+" TEXT, "
-            + KEY_GOLD+" INTEGER DEFAULT 0, "+ KEY_LEVELS +" TEXT, "+KEY_ACTIVE+" INTEGER DEFAULT 0, "
-            + KEY_START_TIME+" INTEGER, "+KEY_DURATION+" INTEGER, "+KEY_COMPLETED+" INTEGER DEFAULT 0);";
+            + KEY_TITLE+" TEXT, "+KEY_DESC+" TEXT, "+KEY_REWARD+" TEXT, " + KEY_GOLD+" INTEGER DEFAULT 0, "
+            + KEY_LEVELS +" TEXT, "+KEY_ACTIVE+" INTEGER DEFAULT 0, " + KEY_START_TIME+" INTEGER, "+KEY_DURATION
+            +" INTEGER, "+KEY_SUCCEED+" INTEGER, "+KEY_COMPLETED+" INTEGER DEFAULT 0);";
 
     public DatabaseHelper DBHelper;
 
@@ -91,21 +92,23 @@ public class DbQuestAdapter {
             q.questActive = true;
             q.startTime = startTime;
             q.questSucceeded = false;
+            q.questCompleted = false;
             db.update(DATABASE_TABLE, Conversions.questToArgs(q), KEY_ROWID+"="+id, null);
         }else
             System.out.println("Error starting Quest. Cannot find with id="+id);
     }
 
-    public boolean finishQuest(long id, long currentTime) {
+    public boolean questSucceeded(long id, long currentTime) {
+        // Stick here later checks for random success
         System.out.println("Checking for finished quest...");
         SQLiteDatabase db = DBHelper.getWritableDatabase();
         Quest q = getQuest(db, id);
         System.out.println("Start time: "+q.startTime);
         System.out.println("Current time: "+currentTime);
         System.out.println("End time: "+(q.startTime + q.duration));
-        if (q.startTime + q.duration < currentTime) {
-            q.questActive = false;
+        if (q.startTime + q.duration < currentTime && q.questActive) {
             q.questSucceeded = true;
+            q.questCompleted = false;
             System.out.println("Finished quest, updating DB");
             int ret = db.update(DATABASE_TABLE, Conversions.questToArgs(q), KEY_ROWID+"="+id, null);
             System.out.println("DB updated with finished quest "+id+": "+(ret > 0));
@@ -116,11 +119,36 @@ public class DbQuestAdapter {
         }
     }
 
+    public boolean questCompleted(long id){
+        // Final step in quest
+        SQLiteDatabase db = DBHelper.getWritableDatabase();
+        Quest q = getQuest(db, id);
+        if(q.questActive && q.questSucceeded){
+            q.questActive = false;
+            q.questCompleted = true;
+            int ret = db.update(DATABASE_TABLE, Conversions.questToArgs(q), KEY_ROWID+"="+id, null);
+            return ret > 0;
+        }else{
+            return false;
+        }
+    }
+
     public Cursor getActiveQuests(){
         SQLiteDatabase db = DBHelper.getReadableDatabase();
-        String query = "SELECT * FROM "+DATABASE_TABLE+" WHERE "+KEY_ACTIVE+" = 1;";
-        Cursor c = db.rawQuery(query, null);
-        return c;
+        String query = "SELECT * FROM "+DATABASE_TABLE+" WHERE "+KEY_ACTIVE+" = 1 AND "+KEY_SUCCEED+" = 0;";
+        return db.rawQuery(query, null);
+    }
+
+    public Cursor getSucceededQuests(){
+        SQLiteDatabase db = DBHelper.getReadableDatabase();
+        String query = "SELECT * FROM "+DATABASE_TABLE+" WHERE "+KEY_SUCCEED+" = 1 AND "+KEY_COMPLETED+" = 0;";
+        return db.rawQuery(query, null);
+    }
+
+    public Cursor getCompletedQuests(){
+        SQLiteDatabase db = DBHelper.getReadableDatabase();
+        String query = "SELECT * FROM "+DATABASE_TABLE+" WHERE "+KEY_COMPLETED+" = 1;";
+        return db.rawQuery(query, null);
     }
 
     public Cursor getAllQuests(){

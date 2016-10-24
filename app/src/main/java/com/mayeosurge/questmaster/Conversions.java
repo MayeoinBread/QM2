@@ -11,7 +11,13 @@ public class Conversions {
         StringBuilder sb = new StringBuilder();
         if (list != null){
             for (InvItem i : list) {
-                sb.append(i.id).append(":").append(i.getQty()).append(";");
+                String n;
+                if(i instanceof Melee) n = "m";
+                else if (i instanceof Shield) n = "s";
+                else if (i instanceof Armour) n = "a";
+                else n = "i";
+                //System.out.println("rTs Item type: "+n);
+                sb.append(i.id).append(":").append(i.getQty()).append(":").append(n).append(";");
             }
         }
         return sb.toString();
@@ -31,9 +37,25 @@ public class Conversions {
 
             for (String s : ls) {
                 int id = Integer.parseInt(s.substring(0, s.indexOf(':')));
-                int qty = Integer.parseInt(s.substring(s.indexOf(':') + 1));
+                int st = s.indexOf(':')+1;
+                int qty = Integer.parseInt(s.substring(st, s.indexOf(':', st)));
+                String type = s.substring(s.indexOf(':', st+1) + 1);
                 // Not sure of bool's here...
-                ret.add(new InvItem(id, qty, false, true, true));
+                //System.out.println("sTr Item type: "+type);
+                switch(type){
+                    case "m":
+                        ret.add(new Melee(id, qty, true));
+                        break;
+                    case "a":
+                        ret.add(new Armour(id, qty, true));
+                        break;
+                    case "s":
+                        ret.add(new Shield(id, qty, true));
+                        break;
+                    default:
+                        ret.add(new InvItem(id, qty, false, true, true));
+                        break;
+                }
             }
             return ret;
         }
@@ -65,7 +87,8 @@ public class Conversions {
         args.put(DbQuestAdapter.KEY_ACTIVE, q.questActive ? 1:0);
         args.put(DbQuestAdapter.KEY_START_TIME, q.startTime);
         args.put(DbQuestAdapter.KEY_DURATION, q.duration);
-        args.put(DbQuestAdapter.KEY_COMPLETED, q.questSucceeded ? 1:0);
+        args.put(DbQuestAdapter.KEY_SUCCEED, q.questSucceeded ? 1:0);
+        args.put(DbQuestAdapter.KEY_COMPLETED, q.questCompleted ? 1:0);
 
         return args;
     }

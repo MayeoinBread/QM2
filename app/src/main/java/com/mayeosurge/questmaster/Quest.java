@@ -13,6 +13,9 @@ public class Quest {
 
     //TODO pass Hero id (?) as item in Quest for use later
 
+
+    //TODO Quest: active = started, succeeded = finished successfully, completed = succeeded and collected
+
     long id;
     int minStealth;
     int minStrength;
@@ -28,6 +31,7 @@ public class Quest {
     String description;
     boolean questActive;
     boolean questSucceeded;
+    boolean questCompleted;
 
     public Quest(int id){
         this.id = id+1;
@@ -60,6 +64,7 @@ public class Quest {
         duration = ArrayVars.questDuration[r.nextInt(ArrayVars.questDuration.length)];
         questActive = false;
         questSucceeded = false;
+        questCompleted = false;
     }
 
     public Quest(Cursor c){
@@ -77,6 +82,7 @@ public class Quest {
         startTime = c.getInt(7);
         duration = c.getInt(8);
         questSucceeded = c.getInt(9) == 1;
+        questCompleted = c.getInt(10) == 1;
     }
 
     public Quest(int id, String desc){
@@ -274,6 +280,9 @@ public class Quest {
             q.description += q.goldReward+" Gold";
         }
 
+        q.questActive = false;
+        q.questSucceeded = false;
+        q.questCompleted = false;
         q.title = "Random Quest";
 
         return q;

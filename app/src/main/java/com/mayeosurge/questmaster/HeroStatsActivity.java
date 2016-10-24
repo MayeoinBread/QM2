@@ -235,6 +235,7 @@ public class HeroStatsActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             InvItem i = (InvItem)parent.getItemAtPosition(position);
+            System.out.println(i.name+"_"+i.getItemId()+"_"+i.isEquippable+"_"+i.isUsable+"_"+i.getClass());
             invItemPos = i.getItemId();
             PopupMenu popup = new PopupMenu(ctx, view);
             if(i.isUsable)

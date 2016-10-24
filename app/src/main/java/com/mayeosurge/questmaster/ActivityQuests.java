@@ -9,7 +9,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,6 +22,11 @@ public class ActivityQuests extends Activity {
     int totalGold;
     Context c;
     List<Quest> activeQuests;
+    List<Quest> succeededQuests;
+    GridView aGV;
+    QuestGridAdapter aGA;
+    GridView cGV;
+    QuestGridAdapter cGA;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -32,20 +38,41 @@ public class ActivityQuests extends Activity {
         c = this;
 
         initItems();
-        setViews();
 
         findViewById(R.id.quest1).setOnClickListener(questCL);
         findViewById(R.id.quest2).setOnClickListener(questCL);
         findViewById(R.id.quest3).setOnClickListener(questCL);
     }
 
+    private void setGridView(){
+        aGV = (GridView)findViewById(R.id.gvActQuest);
+        aGA = new QuestGridAdapter(this, activeQuests);
+        aGV.setAdapter(aGA);
+
+        cGV = (GridView)findViewById(R.id.gvCompQuest);
+        cGA = new QuestGridAdapter(this, succeededQuests);
+        cGV.setAdapter(cGA);
+        cGV.setOnItemClickListener(ocl);
+    }
+
+    AdapterView.OnItemClickListener ocl = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Quest q = succeededQuests.get(position);
+            if(checkReward(q)) {
+                succeededQuests.remove(q);
+                Toast.makeText(c, "Quest \""+q.title+"\" completed. Reward collected!", Toast.LENGTH_SHORT).show();
+            }
+            cGA.notifyDataSetChanged();
+        }
+    };
+
     private void setViews(){
-        StringBuilder sb = new StringBuilder();
         for(Quest q:activeQuests){
-            if(testFinished(q))
+            if(testFinished(q)){
                 activeQuests.remove(q);
-            else{
-                sb.append("ID: ").append(q.id).append("  Title: ").append(q.title).append("\n");
+                aGA.notifyDataSetChanged();
+            }else{
                 switch((int)q.id){
                     case 1:
                         findViewById(R.id.quest1).setEnabled(false);
@@ -59,11 +86,12 @@ public class ActivityQuests extends Activity {
                 }
             }
         }
-        ((TextView)findViewById(R.id.tvActiveQuests)).setText(sb.toString());
     }
 
     private void initItems(){
         activeQuests = new ArrayList<>();
+        succeededQuests = new ArrayList<>();
+        setGridView();
         DbQuestAdapter dbqa = new DbQuestAdapter(this);
         Cursor c = dbqa.getActiveQuests();
         //Cursor c = dbqa.getAllQuests();
@@ -73,6 +101,14 @@ public class ActivityQuests extends Activity {
             }while (c.moveToNext());
         }
         c.close();
+        setViews();
+        Cursor c2 = dbqa.getSucceededQuests();
+        if(c2.moveToFirst()){
+            do{
+                succeededQuests.add(new Quest(c2));
+            }while (c2.moveToNext());
+        }
+        c2.close();
         dbqa.close();
     }
 
@@ -101,8 +137,6 @@ public class ActivityQuests extends Activity {
                     qNum = 2;
                     break;
             }
-            //TODO scrap method, redo with DB stuff properly
-            //TODO create Quest in QuestActivity through DataBase
             final DbQuestAdapter dQA = new DbQuestAdapter(c);
             dQA.open();
             //final Hero ah = h;
@@ -119,6 +153,8 @@ public class ActivityQuests extends Activity {
                             findViewById(fV.getId()).setEnabled(false);
                             //if(q.questSucceeded)
                             //    addReward(h, q.reward, q.goldReward);
+                            activeQuests.add(q);
+                            aGA.notifyDataSetChanged();
                         }
                     }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
@@ -131,14 +167,24 @@ public class ActivityQuests extends Activity {
 
     private boolean testFinished(Quest q){
         DbQuestAdapter dbqa = new DbQuestAdapter(this);
-        Boolean ret;
-        if(dbqa.finishQuest(q.id, SystemClock.elapsedRealtime())) {
-            ret = true;
-            addReward(h, q.reward, q.goldReward);
-        }else
-            ret = false;
+        Boolean ret = dbqa.questSucceeded(q.id, SystemClock.elapsedRealtime());
         dbqa.close();
         return ret;
+    }
+
+    private boolean checkReward(Quest q){
+        if(q.questActive && q.questSucceeded) {
+            addReward(h, q.reward, q.goldReward);
+            DbQuestAdapter dbqa = new DbQuestAdapter(this);
+            if(dbqa.questCompleted(q.id)){
+                dbqa.close();
+                return true;
+            }
+            dbqa.close();
+            return false;
+        }else
+            System.out.println("Quest not ready?");
+        return false;
     }
 
     public void randomQuest(View v){
@@ -155,6 +201,8 @@ public class ActivityQuests extends Activity {
                         dbqa.newQuest(q);
                         Notifiers.scheduleNotification(c, Notifiers.getNotification(c, "Delay: "+q.duration/1000), (int)q.duration);
                         dbqa.startQuest(q.id, SystemClock.elapsedRealtime());
+                        activeQuests.add(q);
+                        aGA.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
